@@ -28,9 +28,10 @@ def find_three_that_make_2020():
     return False
 
 def get_contents_of_input_file(file_name):
-    parent_dir = pathlib.Path(__file__).parents[0]
+    parent_dir = pathlib.Path(__file__).parent
     input_file = pathlib.PurePath(parent_dir, file_name)
     with open(input_file) as file:
         return file.readlines()
 
+print(find_two_that_make_2020())
 print(find_three_that_make_2020())

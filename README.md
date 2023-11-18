@@ -10,7 +10,8 @@ With [Python](https://www.python.org/downloads/) installed locally and [VSCode P
 [Advent of Code 2020](https://adventofcode.com/2020)
 ### Python
 * [x] Day One
-* [ ] Day Two
+* [x] Day Two
+* [ ] Day Three
 
 ## Resources
 ### Python
