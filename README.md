@@ -13,7 +13,8 @@ With [Python](https://www.python.org/downloads/) installed locally and [VSCode P
 * [x] Day Two
 * [x] Day Three
   * [x] Day Three optimized
-* [ ] Day Four
+* [x] Day Four (with tests!)
+* [ ] Day Five
 
 ## Resources
 ### Python

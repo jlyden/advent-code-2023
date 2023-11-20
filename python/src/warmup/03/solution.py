@@ -1,4 +1,4 @@
-"""https://adventofcode.com/2020/day/2"""
+"""https://adventofcode.com/2020/day/3"""
 
 import pathlib
 from functools import reduce
