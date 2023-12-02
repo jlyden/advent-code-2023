@@ -22,6 +22,7 @@ def get_sum_of_calibration_values(file_name, part):
         return sum
 
 
+"""For Part One"""
 def get_digits_from_string(line):
     digits = ''
     for char in line:
@@ -30,6 +31,7 @@ def get_digits_from_string(line):
     return digits
 
 
+"""For Part Two"""
 def get_first_and_last_digits_with_word_numbers(line):
     first_digit = get_first_digit(line)
     last_digit = get_last_digit(line)
@@ -76,7 +78,7 @@ def look_for_digits(line, word_numbers):
                         return value
     return 'oh $h1t'
 
-
+"""For Both"""
 def get_number_from_digits(digits):
     two_digit_string = ''
     if len(digits) == 1:
