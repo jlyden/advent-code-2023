@@ -1,4 +1,6 @@
-"""https://adventofcode.com/2020/day/7"""
+"""https://adventofcode.com/2020/day/7
+Part One working below. Skipping pt 2 for now
+"""
 
 import pathlib
 
