@@ -7,6 +7,7 @@ With [Python](https://www.python.org/downloads/) installed locally and [VSCode P
 * [x] Day One
 * [x] Day Two
 * [ ] Day Three
+* [ ] Day Four
 
 ## Warmup
 [Advent of Code 2020](https://adventofcode.com/2020)
