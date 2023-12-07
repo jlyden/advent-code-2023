@@ -1,0 +1,37 @@
+all_hands: {
+  'high': {}, {}, ...,
+  'one': [{}, {}, ...],
+  'two': [{}, {}, ...],
+  'three': [{}, {}, ...],
+  'full': [{}, {}, ...],
+  'four': [{}, {}, ...],
+  'five': [{'<hand>': <bid>}, {<etc>}],
+}
+
+parse line and sort into buckets
+parse: split on ' ', int(bid)
+sort to place in `all_hands` above
+len(set(hand)))
+ = 1 => five
+ = 2 => four or full -> freq(set[0]) => 1/4 => four | 2/3 => full
+ = 3 => three or two -> freq(set[0]) => 3 => three | 2 => two | 1 => next element (if next element 1/3 => three | 2 => two)
+ = 4 => one
+ = 5 => high
+
+strengths: {'2': 'M', '3': 'L', '4': 'K', '5': 'J', '6': 'I', '7': 'H', '8': 'G',
+  '9': 'F', 'T': 'E', 'J': 'D', 'Q': 'C', 'K': 'B', 'A': 'A'}
+
+run through buckets, starting at high
+sort all_hands['high'].keys()
+hands.sort(reverse=True?)
+track rank_min
+calculate winning -> rank * bid
+winnings = 0
+for index, hand in enumerate(hands):
+  bid = all_hands['high'][hand]
+  rank = (index + 1) + rank_min
+  winnings += bid * rank
+
+at end of bucket
+rank_min = index + 1 + rank_min
+maybe track winnings per bucket, sum at end?

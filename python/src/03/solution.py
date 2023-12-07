@@ -18,9 +18,8 @@ def solve(file_name):
             if not line:
                 break
 
-            number_matches = re.finditer(r"[^/.]\w*[^/.]", line)
-            symbol_matches = re.finditer(r"(?P<symbol>[^\.\d\n])", line)
-            this_line_symbol_locations = pull_symbol_locations_from_matches(symbol_matches)
+            number_matches = get_number_matches_from_line(line)
+            this_line_symbol_locations = get_symbol_locations_from_line(line)
 
             part_numbers, this_line_candidates = check_current_line_for_part_numbers(number_matches, this_line_symbol_locations, previous_line_symbol_locations)
             found_part_numbers += part_numbers
@@ -34,12 +33,14 @@ def solve(file_name):
     print(found_part_numbers)
     return sum(found_part_numbers)
 
+def get_number_matches_from_line(line):
+    return re.finditer(r"[^/.]\w*[^/.]", line)
 
-def pull_symbol_locations_from_matches(symbol_matches):
+def get_symbol_locations_from_line(line):
+    symbol_matches = re.finditer(r"(?P<symbol>[^\.\d\n])", line)
     symbol_locations = []
     for symbol_match in symbol_matches:
         symbol_locations.append(symbol_match.start())
-    
     return symbol_locations
 
 
@@ -121,4 +122,4 @@ def number_span_adjacent_to_symbol(number_span, symbol_location):
     end = number_span[1] + 1
     return symbol_location in range(start, end)
 
-print(solve('input_sample.txt')) # 533728 is too low, 536236 also wrong ): 
+print(solve('input.txt')) # 533728 is too low, 536236 also wrong ): 

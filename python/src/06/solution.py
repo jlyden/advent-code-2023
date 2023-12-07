@@ -31,7 +31,6 @@ def get_wins_for_race(total_time, record):
     lowest_charge_to_win = find_lowest_charge_time_binary_search(1, peak, total_time, record)
     return calculate_wins(peak, lowest_charge_to_win, total_time)
 
-# broken
 def find_lowest_charge_time_binary_search(bottom, top, total_time, record):
     if (top - bottom) == 1:
         return top
