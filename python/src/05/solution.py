@@ -7,8 +7,10 @@ need completely different approach
 
 import pathlib
 
-def solve(file_name):
-    seeds, almanac = parse_almanac(file_name)
+def solve(file_name, part):
+    seeds, almanac = parse_almanac(file_name, part)
+    print(seeds)
+    print(almanac)
     seed_locations = get_corresponding_seed_locations(seeds, almanac)
     return min(seed_locations)
 
@@ -45,7 +47,7 @@ def process_value_with_map(source, map):
     return source
 
 
-def parse_almanac(file_name):
+def parse_almanac(file_name, part):
     input_file = pathlib.PurePath(pathlib.Path(__file__).parent, file_name)
     with open(input_file) as file:
         seeds = []
@@ -58,7 +60,7 @@ def parse_almanac(file_name):
                 break
 
             if 'seeds:' in line:
-                seeds = parse_seeds(line)
+                seeds = parse_seeds(line, part)
             elif 'map:' in line:
                 map_title = line.split(' ')[0]
                 map_in_progress = map_title
@@ -72,9 +74,23 @@ def parse_almanac(file_name):
         return seeds, almanac
 
 
-def parse_seeds(seeds_line):
+def parse_seeds(seeds_line, part):
     numerics = seeds_line.replace('\n', '').split(':')[1].strip().split(' ')
-    return [int(numeric.strip()) for numeric in numerics if True]
+    numbers = [int(numeric.strip()) for numeric in numerics if True]
+    if part == 'part_one':
+        return numbers
+
+    seeds = []
+    for a,b in pairwise(numbers):
+        more_seeds = list(range(a, a+b))
+        seeds += more_seeds
+    return seeds
+
+
+def pairwise(iterable):
+    """Credit: https://stackoverflow.com/a/5389547"""
+    it = iter(iterable)
+    return zip(it, it)
 
 
 def translate_map_line(line):
@@ -100,4 +116,4 @@ def get_contents_of_input_file(file_name):
     with open(input_file) as file:
         return file.readlines()
 
-print(solve('input.txt'))
+print(solve('input_sample.txt', 'part_two'))
