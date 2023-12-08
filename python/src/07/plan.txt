@@ -1,3 +1,4 @@
+** PART_ONE ** 
 all_hands: {
   'high': {}, {}, ...,
   'one': [{}, {}, ...],
@@ -11,7 +12,7 @@ all_hands: {
 parse line and sort into buckets
 parse: split on ' ', int(bid)
 sort to place in `all_hands` above
-len(set(hand)))
+len(set(hand))
  = 1 => five
  = 2 => four or full -> freq(set[0]) => 1/4 => four | 2/3 => full
  = 3 => three or two -> freq(set[0]) => 3 => three | 2 => two | 1 => next element (if next element 1/3 => three | 2 => two)
@@ -35,3 +36,24 @@ for index, hand in enumerate(hands):
 at end of bucket
 rank_min = index + 1 + rank_min
 maybe track winnings per bucket, sum at end?
+
+** PART_TWO ADJUSTMENTS ** 
+J = joker, not jack
+ - lowest strength
+ - but can 'be' any other card
+
+when sorting type of hand
+len(set(hand))
+ = 1 => five
+ = 2 => four or full -> freq(set[0]) => 1/4 => four | 2/3 => full
+  if J => five
+ = 3 => three or two -> freq(set[0]) => 3 => three | 2 => two | 1 => next element (if next element 1/3 => three | 2 => two)
+  if J => four
+ = 4 => one
+  if J => three
+ = 5 => high
+  if J => two
+
+for strengths -> 
+strengths: {'J': 'N', '2': 'M', '3': 'L', '4': 'K', '5': 'J', '6': 'I', '7': 'H', '8': 'G',
+  '9': 'F', 'T': 'E', 'Q': 'C', 'K': 'B', 'A': 'A'}
