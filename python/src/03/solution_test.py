@@ -21,7 +21,6 @@ class TestSolution03(unittest.TestCase):
             print(actual_number, number_span)
             #self.assertEqual(expected[actual_number], number_span)
 
-
     def test_get_symbol_locations_from_line(self):
         line_no_symbols = '....401.............425........697...............963...................................420.....................\n'
         expected_no_symbols = []
