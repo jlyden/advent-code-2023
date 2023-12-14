@@ -1,0 +1,22 @@
+can I skip grid, and just work with line, line -1 and line +1?
+
+Find S
+Follow S through pipes, both tracks
+at S, look at four directions to see where there are valid pipes
+    N
+  W p E
+    S
+
+Valid values at 
+N | F 7
+E - F L
+S | L J
+W - J 7
+
+chars and directions
+'|' NS
+'-' EW
+'L' NE
+'J' NW
+'7' SW
+'F' SE

@@ -1,0 +1,12 @@
+processing file:
+cols_no_stars = len(line)
+rows_no_stars = []
+star_coods = {}
+row_index = 0
+
+foreach line
+ regex to get #
+ if none, add to rows_no_stars
+ if some, remove cols from cols_no_stars
+ add to star_coords[row_index] = [cols]
+ row_index++
