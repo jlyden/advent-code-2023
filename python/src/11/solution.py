@@ -115,4 +115,4 @@ def get_galaxy_indices_on_line(line):
     return col_indices
 
 
-print(solve('input.txt'))
+print(solve('input_sample.txt'))
