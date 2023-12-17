@@ -1,20 +1,21 @@
-"""https://adventofcode.com/2023/day/3"""
+"""https://adventofcode.com/2023/day/3
+This never worked for full input, see solution_v2.py
+"""
 
 import pathlib
 import re
 
-"""Incomplete Part One. Working for sample input, but not full
-Fixed one bug with symbol between two numbers
-"""
+
 def solve(file_name):
     input_file = pathlib.PurePath(pathlib.Path(__file__).parent, file_name)
     with open(input_file) as file:
+        all_symbols_found = []
         found_part_numbers = []
         previous_line_candidates = {}
         previous_line_symbol_locations = []
 
         while True:
-            line = file.readline().replace('\n', '')
+            line = file.readline()
             if not line:
                 break
 
@@ -24,7 +25,7 @@ def solve(file_name):
             part_numbers, this_line_candidates = check_current_line_for_part_numbers(number_matches, this_line_symbol_locations, previous_line_symbol_locations)
             found_part_numbers += part_numbers
 
-            part_numbers = check_previous_line_for_part_numbers(this_line_symbol_locations, previous_line_candidates)
+            part_numbers = check_previous_line_for_part_numbers(previous_line_candidates, this_line_symbol_locations)
             found_part_numbers += part_numbers
 
             previous_line_candidates = this_line_candidates
@@ -33,14 +34,14 @@ def solve(file_name):
     print(found_part_numbers)
     return sum(found_part_numbers)
 
+
 def get_number_matches_from_line(line):
-    return re.finditer(r"[^/.]\w*[^/.]", line)
+    return re.finditer(r'[^0-9]*(?P<number>[0-9]*)[^0-9]*', line)
+
 
 def get_symbol_locations_from_line(line):
-    symbol_matches = re.finditer(r"(?P<symbol>[^\.\d\n])", line)
-    symbol_locations = []
-    for symbol_match in symbol_matches:
-        symbol_locations.append(symbol_match.start())
+    symbol_matches = re.finditer(r'(?P<symbol>[^\.\d\n])', line)
+    symbol_locations = list(map(lambda match: match.start(), symbol_matches))
     return symbol_locations
 
 
@@ -49,54 +50,34 @@ def check_current_line_for_part_numbers(number_matches, this_line_symbol_locatio
     previous_line_candidates = {}
 
     for number_match in number_matches:
-        possible_number = number_match.group(0)
+        possible_number = number_match.group('number')
+        if len(possible_number) == 0:
+            continue
 
-        if match_has_adjacent_symbol(possible_number):
-            only_number_match = re.search(r"\D*(?P<only_number>\d*)", possible_number)
-            part_numbers.append(int(only_number_match.group('only_number')))
+        number_span = number_match.span('number')
+
+        if number_span_adjacent_to_any_of_symbols(number_span, this_line_symbol_locations):
+            part_numbers.append(int(possible_number))
+        elif number_span_adjacent_to_any_of_symbols(number_span, previous_line_symbol_locations):
+            part_numbers.append(int(possible_number))
         else:
-            number_span = number_match.span()
-
-            if number_span_adjacent_to_any_of_symbols(number_span, this_line_symbol_locations):
-                part_numbers.append(int(possible_number))
-            elif number_span_adjacent_to_any_of_symbols(number_span, previous_line_symbol_locations):
-                part_numbers.append(int(possible_number))
-            else:
-                # Check with symbols from next line on next iteration
-                previous_line_candidates[int(possible_number)] = number_span
+            # Check with symbols from next line on next iteration
+            previous_line_candidates[int(possible_number)] = number_span
 
     return part_numbers, previous_line_candidates
 
 
-def match_has_adjacent_symbol(possible_number):
-    return not possible_number.isdigit()
-
-
-def check_previous_line_for_part_numbers(symbol_locations, previous_line_candidates):
+def check_previous_line_for_part_numbers(previous_line_candidates, symbol_locations):
     part_numbers = []
 
     if len(symbol_locations) == 0:
         return part_numbers
 
-    keys_to_remove_from_previous_line_candidates = []
-
-    for symbol_location in symbol_locations:
-        # remove keys surpassed after last iteration
-        if len(keys_to_remove_from_previous_line_candidates) > 0:
-            for key in keys_to_remove_from_previous_line_candidates:
-                del previous_line_candidates[key]
-        keys_to_remove_from_previous_line_candidates = []
-
-        for posible_number, number_span in previous_line_candidates.items():
+    for posible_number, number_span in previous_line_candidates.items():
+        for symbol_location in symbol_locations:
             if number_span_adjacent_to_symbol(number_span, symbol_location):
                 part_numbers.append(int(posible_number))
-                keys_to_remove_from_previous_line_candidates.append(posible_number)
                 break
-
-            # Plan to remove key if span is earlier than location now being checked
-            if number_span[1] < symbol_location:
-                keys_to_remove_from_previous_line_candidates.append(posible_number)
-            continue
 
     return part_numbers
 
@@ -120,6 +101,7 @@ def number_span_adjacent_to_symbol(number_span, symbol_location):
     # handle diagonals
     start = number_span[0] - 1 if number_span[0] > 0 else number_span[0]
     end = number_span[1] + 1
-    return symbol_location in range(start, end)
+    result = symbol_location in range(start, end)
+    return result
 
-print(solve('input.txt')) # 533728 is too low, 536236 also wrong ): 
+print(solve('input.txt')) # 4361 is correct sample result # wrong on input: 533728, 536236, 542484  
