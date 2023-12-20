@@ -1,12 +1,23 @@
 """
 https://adventofcode.com/2023/day/3
-Second Attempt, different strategy
+Second Attempt, different strategy - Part One complete
 """
 
 import pathlib
 import re
 
-def solve(file_name):
+def solve_part_two(file_name):
+    number_map, symbol_locations = process_file(file_name, part = 'part_two')
+    gear_ratios = get_gear_ratios_for_asterisks(number_map, symbol_locations)
+    return sum(gear_ratios)
+
+
+def get_gear_ratios_for_asterisks(number_map, symbol_locations):
+    # see TODO below then plan this
+    return False
+
+
+def solve_part_one(file_name):
     number_map, symbol_locations = process_file(file_name)
     part_numbers = find_part_numbers(number_map, symbol_locations)
     print(part_numbers)
@@ -46,7 +57,7 @@ def number_span_adjacent_to_symbol(number_span, symbol_location):
     return result
 
 
-def process_file(file_name):
+def process_file(file_name, part = 'part_one'):
     input_file = pathlib.PurePath(pathlib.Path(__file__).parent, file_name)
     with open(input_file) as file:
         number_map = {}
@@ -57,12 +68,27 @@ def process_file(file_name):
             line = file.readline()
             if not line:
                 break
-
+            
+            # TODO: rework so that line number points to a []
             number_map.update(get_number_map_for_line(line_index, line))
-            symbol_locations[line_index] = get_symbol_locations_for_line(line)
+            if part == 'part_one':
+                symbol_locations[line_index] = get_symbol_locations_for_line(line)
+            else:
+                astrisk_locs = get_astrisk_locations_for_line(line)
+                if astrisk_locs != None:
+                    symbol_locations[line_index] = get_astrisk_locations_for_line(line)
             line_index += 1
 
     return number_map, symbol_locations
+
+
+def get_astrisk_locations_for_line(line):
+    symbol_locations = []
+    symbol_matches = re.finditer(r'([^\.\d\n])', line)
+    for symbol_match in symbol_matches:
+        if symbol_match.group() == '*':
+            symbol_locations.append(symbol_match.start())
+    return symbol_locations if len(symbol_locations) > 0 else None
 
 
 def get_number_map_for_line(line_index, line):
@@ -83,4 +109,4 @@ def get_symbol_locations_for_line(line):
     return symbol_locations
 
 
-print(solve('input.txt'))
+print(solve_part_two('input_sample.txt', ))
