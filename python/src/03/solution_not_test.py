@@ -1,4 +1,4 @@
-from solution import get_number_matches_from_line, get_symbol_locations_from_line, number_span_adjacent_to_symbol
+from solution_not import get_number_matches_from_line, get_symbol_locations_from_line, number_span_adjacent_to_symbol
 import unittest
 
 class TestSolution03(unittest.TestCase):
