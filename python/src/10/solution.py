@@ -11,73 +11,75 @@ def solve(file_name):
 
 def get_farthest_steps_from_s(s_node, sketch_lines):
     next_nodes = get_next_nodes_from_node(s_node, sketch_lines)
-    print(next_nodes)
     steps = 1
 
-    while steps < 10:
+    # ensure we don't end up in infinite loop
+    while steps < 20000:
         steps += 1
-        print("Steps: " + str(steps))
         nodes_to_check = {}
 
         for direction, next_node in next_nodes.items():
             next_next_nodes = get_next_nodes_from_node(next_node, sketch_lines, direction)
             nodes_to_check = nodes_to_check | next_next_nodes
 
-        print(nodes_to_check)
-        if len(nodes_to_check) < 2:
+        if at_same_node(nodes_to_check):
             return steps
 
+        # NOTE: this is a hack, but works
+        # got back to start
+        if len(nodes_to_check) == 0:
+            return steps // 2
+
         next_nodes = nodes_to_check
+    print(steps)
     return False
+
+
+def at_same_node(nodes):
+    if len(nodes) != 2:
+        return False
+    
+    [node_one, node_two] = nodes.values()
+    return node_one == node_two
 
 
 def get_next_nodes_from_node(node, sketch_lines, direction = None):
     next_nodes = {}
     possible_directions = get_possible_directions_for_char(node)
-    print(possible_directions)
     reverse_direction = get_reverse_direction(direction)
     if reverse_direction in possible_directions:
-        print('in reverse direction removal')
         possible_directions.remove(reverse_direction)
     for direction in possible_directions:
         next_node = get_next_node_for_direction(node, direction, sketch_lines)
         if next_node != None:
             next_nodes[direction] = (next_node)
-            print(next_nodes)
     return next_nodes
 
 
 def get_reverse_direction(direction):
-    if direction == Direction.NORTH:
-        return Direction.SOUTH
-    elif direction == Direction.SOUTH:
-        return Direction.NORTH
-    elif direction == Direction.EAST:
-        return Direction.WEST
-    elif direction == Direction.WEST:
-        return Direction.EAST
-    else:
-        return False
+    if direction == None:
+        return None
+    reverse_directions = {
+        Direction.NORTH: Direction.SOUTH,
+        Direction.SOUTH: Direction.NORTH,
+        Direction.EAST: Direction.WEST,
+        Direction.WEST: Direction.EAST,
+    }
+    return reverse_directions[direction]
 
 
 def get_possible_directions_for_char(node):
     [x, y, char] = node
-    if char == '|':
-        return [Direction.NORTH, Direction.SOUTH]
-    elif char == '-':
-        return [Direction.EAST, Direction.WEST]
-    elif char == 'L':
-        return [Direction.NORTH, Direction.EAST]
-    elif char == 'J':
-        return [Direction.NORTH, Direction.WEST]
-    elif char == '7':
-        return [Direction.SOUTH, Direction.WEST]
-    elif char == 'F':
-        return [Direction.SOUTH, Direction.EAST]
-    elif char == 'S':
-        return [Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST]
-    else:
-        return False
+    char_to_dirs = {
+        '|': [Direction.NORTH, Direction.SOUTH],
+        '-': [Direction.EAST, Direction.WEST],
+        'L': [Direction.NORTH, Direction.EAST],
+        'J': [Direction.NORTH, Direction.WEST],
+        '7': [Direction.SOUTH, Direction.WEST],
+        'F': [Direction.SOUTH, Direction.EAST],
+        'S': [Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST],
+    }
+    return char_to_dirs[char]
 
 
 def get_next_node_for_direction(node, direction, sketch_lines):
@@ -100,13 +102,13 @@ def get_directional_values(node, direction):
         valid_chars_for_direction = '|F7'
     elif direction == Direction.EAST:
         transformed_location = (x + 1, y)
-        valid_chars_for_direction = '-F7'
+        valid_chars_for_direction = '-J7'
     elif direction == Direction.SOUTH:
         transformed_location = (x, y + 1)
-        valid_chars_for_direction = '|LJ'
+        valid_chars_for_direction = '|JL'
     elif direction == Direction.WEST and x > 0:
         transformed_location = (x - 1, y)
-        valid_chars_for_direction = '-JE'
+        valid_chars_for_direction = '-FL'
     
     return transformed_location, valid_chars_for_direction
 
@@ -140,4 +142,4 @@ def process_file(file_name):
         return s_node, sketch_lines
 
 
-print(solve('inputs/sample_02_simple.txt'))
+print(solve('inputs/input.txt'))

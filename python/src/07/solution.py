@@ -2,7 +2,6 @@
 
 import pathlib
 
-
 def solve(file_name, get_type_func, strengths):
     all_hands = categorize_hands(file_name, get_type_func, strengths)
     return calculate_total_winnings(all_hands)
@@ -20,6 +19,7 @@ def categorize_hands(file_name, get_type_func, strengths):
             hand_type, converted_hand, bid = process_line(line, get_type_func, strengths)
             all_hands[hand_type][converted_hand] = bid
     return all_hands
+
 
 def process_line(line, get_type_func, strengths):
     [hand, bid] = line.split(' ')
@@ -45,6 +45,7 @@ def get_type_of_hand(hand):
             return 'two' if freq == 2 else 'three'
     else:
         return len_to_type[card_count]
+
 
 def get_type_of_hand_with_jokers(hand):
     JOKER = 'J'
@@ -72,6 +73,7 @@ def get_type_of_hand_with_jokers(hand):
     elif card_count == 5:
         return 'two' if JOKER in hand else 'high'
     return False
+
 
 # So sorting will be easier later
 def convert_hand(strengths, hand):
@@ -116,5 +118,5 @@ joker_strengths = {
     '8': 'G', '9': 'F', 'T': 'E', 'Q': 'C', 'K': 'B', 'A': 'A'
 }
 
-#print(solve('input.txt', get_type_of_hand, strengths))
+#print(solve('input_sample.txt', get_type_of_hand, strengths)) # 251216224 is correct
 #print(solve('input_sample.txt', get_type_of_hand_with_jokers, joker_strengths)) # 250888594 too high, but works for sample
