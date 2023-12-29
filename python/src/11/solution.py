@@ -4,8 +4,8 @@ import pathlib
 import re
 
 
-def solve(file_name):
-    expanded_galaxy_coords = process_file(file_name)
+def solve(file_name, expansion_size):
+    expanded_galaxy_coords = process_file(file_name, expansion_size)
     distances = calculate_distances_between_all_galaxies(expanded_galaxy_coords)
     return sum(distances)
 
@@ -57,7 +57,7 @@ def calculate_galaxy_distances_for_cols_in_same_row(cols):
     return distances
 
 
-def process_file(file_name):
+def process_file(file_name, expansion_size):
     input_file = pathlib.PurePath(pathlib.Path(__file__).parent, file_name)
     with open(input_file) as file:
         galaxy_coords = {}
@@ -72,16 +72,16 @@ def process_file(file_name):
             col_indices = get_galaxy_indices_on_line(line)
             if len(col_indices) == 0:
                 # handle vertical expansion (of rows) with bonus bump
-                row_index += 1
+                row_index += expansion_size - 1
             else:
                 galaxy_coords[row_index] = col_indices
                 cols_with_galaxies += col_indices
             row_index += 1
 
-        return expand_the_universe_horizontally(galaxy_coords, cols_with_galaxies)
+        return expand_the_universe_horizontally(galaxy_coords, cols_with_galaxies, expansion_size)
 
 
-def expand_the_universe_horizontally(galaxy_coords, cols_with_galaxies):
+def expand_the_universe_horizontally(galaxy_coords, cols_with_galaxies, expansion_size):
     expanded_galaxy_coords = {}
     row_expansion = 0
     cols_no_galaxies = get_cols_without_galaxies(cols_with_galaxies)
@@ -93,7 +93,7 @@ def expand_the_universe_horizontally(galaxy_coords, cols_with_galaxies):
             updated_galaxy = galaxy
             for col in cols_no_galaxies:
                 if galaxy > col:
-                    updated_galaxy += 1
+                    updated_galaxy += expansion_size - 1
             expanded_galaxy_cols.append(updated_galaxy)
         expanded_galaxy_coords[row + row_expansion] = expanded_galaxy_cols
     return expanded_galaxy_coords
@@ -115,4 +115,4 @@ def get_galaxy_indices_on_line(line):
     return col_indices
 
 
-print(solve('input_sample.txt'))
+print(solve('input.txt', 1000000))
